@@ -11,14 +11,16 @@ class NoteRepositoryImp(
     private val dataSource:NoteDataSource) : NoteRepository {
 
     override suspend fun getNotes(): NoteList {
-        dataSource.getNotes().data.forEach{
+        return dataSource.getNotes()
+        /*dataSource.getNotes().data.forEach{
                 note -> localDataSource.saveNote(note.toNoteEntity())
         }
-        return localDataSource.getNotes()
+        return localDataSource.getNotes() */
     }
 
     override suspend fun saveNote(note: Note?): Note? {
         return  dataSource.saveNote(note)
+        //return  dataSource.saveNote(note)
     }
 
 

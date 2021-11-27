@@ -15,6 +15,7 @@ import com.mariotorrese.app_notas.data.local.AppDataBase
 import com.mariotorrese.app_notas.data.local.LocalDataSource
 import com.mariotorrese.app_notas.data.model.Note
 import com.mariotorrese.app_notas.data.remote.ApiClientD
+import com.mariotorrese.app_notas.data.remote.FirebaseService
 import com.mariotorrese.app_notas.data.remote.NoteDataSource
 import com.mariotorrese.app_notas.databinding.FragmentNoteEditBinding
 import com.mariotorrese.app_notas.presentation.NoteViewModel
@@ -29,7 +30,7 @@ class NoteEditFragment : Fragment(R.layout.fragment_note_edit) {
     private  val viewModel by viewModels<NoteViewModel> {
         NoteViewModelFactory(NoteRepositoryImp(
             LocalDataSource(AppDataBase.getDataBase(this.requireContext()).noteDao()),
-            NoteDataSource(ApiClientD.service)))
+            NoteDataSource(FirebaseService())))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -39,7 +40,7 @@ class NoteEditFragment : Fragment(R.layout.fragment_note_edit) {
 
         binding.btnAddNote.setOnClickListener {
             var note = Note(
-                0,
+                "",
                 binding.editTitle.text.toString(),
                 binding.editContent.text.toString(),
                 binding.editImageUrl.text.toString()
