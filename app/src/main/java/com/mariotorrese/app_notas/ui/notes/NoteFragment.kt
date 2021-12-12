@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -34,6 +35,8 @@ class NoteFragment : Fragment(R.layout.fragment_note) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+
         binding = FragmentNoteBinding.bind(view)
 
         binding.recyclerNotes.layoutManager = GridLayoutManager(requireContext(), 2)
@@ -43,6 +46,44 @@ class NoteFragment : Fragment(R.layout.fragment_note) {
             findNavController().navigate(action)
         }
 
+        getNotes()
+
+        refreshNotes()
+
+        /* viewModel.fetchNotes().observe(viewLifecycleOwner, { result ->
+            when(result){
+                is Resource.Loading -> {
+                    binding.progressbar.visibility = View.VISIBLE
+
+                }
+                is Resource.Success -> {
+                    binding.progressbar.visibility = View.GONE
+                    adapter = NoteAdapter(result.data.data){ note ->
+                        onNoteClick(note)
+                    }
+                    binding.recyclerNotes.adapter = adapter
+                    Log.d("LiveData","${result.data.toString()}")
+                }
+                is Resource.Failure -> {
+                    binding.progressbar.visibility = View.GONE
+                    Log.d("LiveData","${result.exception.toString()}")
+                }
+            }
+        }) */
+    }
+
+    private fun refreshNotes() {
+
+        binding.swipeToRefresh.setOnRefreshListener {
+            getNotes()
+
+            Log.d("LiveData","Refreshed")
+            binding.swipeToRefresh.isRefreshing = false
+
+        }
+    }
+
+    private fun getNotes() {
         viewModel.fetchNotes().observe(viewLifecycleOwner, { result ->
             when(result){
                 is Resource.Loading -> {
